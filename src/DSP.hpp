@@ -184,7 +184,7 @@ template <typename T> inline T DSP<T>::calculateVolumeDbLevel(T* leftBuffer, T* 
     T volume = 0;
 
     for(size_t i = 0; i < count; i++) {
-        sum += pow<T>((leftBuffer[i] + rightBuffer[i])/T(2), 2);
+        sum += pow((T(leftBuffer[i]) + T(rightBuffer[i]))/T(2), 2);
     }
 
     volume = T(20) * std::log10(std::sqrt(sum / T(count)));
