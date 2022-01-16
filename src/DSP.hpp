@@ -9,8 +9,7 @@ This library is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-#ifndef DSP_HPP
-#define DSP_HPP
+#pragma once
 #include <cmath>
 #include <vector>
 #include "SearchUtil.hpp"
@@ -22,61 +21,61 @@ You should have received a copy of the GNU Lesser General Public License along w
 #define REAL 0
 #define IMAG 1
 
-template<class T>
-class DSP
-{
-public:
-    static inline T *hanningMultipliers(size_t dataSize);
-    static inline T *hanningMultipliersMatlab(int N, short itype = 0);
-    static inline T *hammingMultipliers(int windowLength);
-    static inline T *blackmanMultipliers(int windowLength);
-    static inline T calculateMagnitude(T real, T imaginary);
-    static inline T calculateMagnitudeDb(T real, T imaginary);
-    static inline T calculateMagnitudeDb(T magnitude);
-    static inline T calculateExponetialVolume(T linearVolume);
-    static inline T calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count);
-    static inline double calculatePerceptualLightness(const RGB &rgb);
-    static inline double calculateContrast(const RGB &rgb1, const RGB &rgb2);
-    /**
-     * Calculates black or white foreground color that makes maximum contrast for the given background color.
-     * @param backgroundColor background color
-     * @param tolerence Tolorence value between 0 and 100 for white color. For example, is 10 is chosen for tolerence,
-     * then until contrast is 10, this method will return true, otherwise, will return the calculated value.
-     * @return false for black, true for white.
-     */
-    static inline bool calculateBWForegroundColor(const RGB & backgroundColor, const int &tolerence);
-};
-
+namespace DSP {
+    template<class T>
+    class DSP {
+    public:
+        static inline T *hanningMultipliers(size_t dataSize);
+        static inline T *hanningMultipliersMatlab(int N, short itype = 0);
+        static inline T *hammingMultipliers(int windowLength);
+        static inline T *blackmanMultipliers(int windowLength);
+        static inline T calculateMagnitude(T real, T imaginary);
+        static inline T calculateMagnitudeDb(T real, T imaginary);
+        static inline T calculateMagnitudeDb(T magnitude);
+        static inline T calculateExponetialVolume(T linearVolume);
+        static inline T calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count);
+        static inline double calculatePerceptualLightness(const RGB &rgb);
+        static inline double calculateContrast(const RGB &rgb1, const RGB &rgb2);
+        /**
+         * Calculates black or white foreground color that makes maximum contrast for the given background color.
+         * @param backgroundColor background color
+         * @param tolerence Tolorence value between 0 and 100 for white color. For example, is 10 is chosen for tolerence,
+         * then until contrast is 10, this method will return true, otherwise, will return the calculated value.
+         * @return false for black, true for white.
+         */
+        static inline bool calculateBWForegroundColor(const RGB & backgroundColor, const int &tolerence);
+    };
+}
 // Inline Method Definitions
 
-template <class T> inline T DSP<T>::calculateMagnitudeDb(T magnitude)
+template <class T> inline T DSP::DSP<T>::calculateMagnitudeDb(T magnitude)
 {
     return log10(magnitude)*20;
 }
 
-template <> inline double DSP<double>::calculateMagnitudeDb(double real, double imaginary)
+template <> inline double DSP::DSP<double>::calculateMagnitudeDb(double real, double imaginary)
 {
     return 10*log10(real*real + imaginary*imaginary);
 }
 
-template <> inline float DSP<float>::calculateMagnitudeDb(float real, float imaginary)
+template <> inline float DSP::DSP<float>::calculateMagnitudeDb(float real, float imaginary)
 {
     return 10*log10f(real*real + imaginary*imaginary);
 }
 
-template <> inline long double DSP<long double>::calculateMagnitudeDb(long double real, long double imaginary)
+template <> inline long double DSP::DSP<long double>::calculateMagnitudeDb(long double real, long double imaginary)
 {
     return 10*log10l(real*real + imaginary*imaginary);
 }
 
 
-template <class T> inline T DSP<T>::calculateMagnitude(T real, T imaginary)
+template <class T> inline T DSP::DSP<T>::calculateMagnitude(T real, T imaginary)
 {
     return std::sqrt(real*real + imaginary*imaginary);
 }
 
 
-template <class T> inline T * DSP<T>::hanningMultipliers(size_t dataSize){
+template <class T> inline T * DSP::DSP<T>::hanningMultipliers(size_t dataSize){
     T *multipliers;
 
     multipliers = new T[dataSize];
@@ -88,7 +87,7 @@ template <class T> inline T * DSP<T>::hanningMultipliers(size_t dataSize){
 }
 
 // Create a hamming window of windowLength samples in buffer
-template<class T> inline T* DSP<T>::hammingMultipliers(int windowLength) {
+template<class T> inline T* DSP::DSP<T>::hammingMultipliers(int windowLength) {
     T *timeDomain = new T[windowLength];
     for(int i = 0; i < windowLength; i++) {
         timeDomain[i] = T(0.53836) - ( T(0.46164) * cos( T(2) * M_PI * T(i)  / ( T(windowLength) - T(1) ) ) );
@@ -97,7 +96,7 @@ template<class T> inline T* DSP<T>::hammingMultipliers(int windowLength) {
     return timeDomain;
 }
 
-template<class T> inline T* DSP<T>::blackmanMultipliers(int windowLength) {
+template<class T> inline T* DSP::DSP<T>::blackmanMultipliers(int windowLength) {
     T *timeDomain = new T[windowLength];
     for(int i = 0; i < windowLength; i++) {
         timeDomain[i] = T(0.42) - T(0.5) * std::cos(T(2) * M_PI * i / (T(windowLength) - T(1))) + T(0.08) * std::cos(T(4.0) * M_PI * T(i) / (T(windowLength) - T(1)));
@@ -125,7 +124,7 @@ template<class T> inline T* DSP<T>::blackmanMultipliers(int windowLength) {
     Copyright 1988-2004 The MathWorks, Inc.
 %   $Revision: 1.11.4.3 $  $Date: 2007/12/14 15:05:04 $
 */
-template <class T> inline T * DSP<T>::hanningMultipliersMatlab(int N, short itype){
+template <class T> inline T * DSP::DSP<T>::hanningMultipliersMatlab(int N, short itype){
     int half, i, idx, n;
     T *w;
 
@@ -171,7 +170,7 @@ template <class T> inline T * DSP<T>::hanningMultipliersMatlab(int N, short ityp
     return w;
 }
 
-template<class T> inline T DSP<T>::calculateExponetialVolume(T linearVolume){
+template<class T> inline T DSP::DSP<T>::calculateExponetialVolume(T linearVolume){
     if(linearVolume == 0)
         return 0;
     if(linearVolume == 1)
@@ -179,7 +178,7 @@ template<class T> inline T DSP<T>::calculateExponetialVolume(T linearVolume){
     return exp(pow(T(6.908), linearVolume)) / T(1000);
 }
 
-template <typename T> inline T DSP<T>::calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count) {
+template <typename T> inline T DSP::DSP<T>::calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count) {
     T sum = 0;
     T volume = 0;
 
@@ -192,7 +191,7 @@ template <typename T> inline T DSP<T>::calculateVolumeDbLevel(T* leftBuffer, T* 
     return volume;
 }
 
-template<class T> inline double DSP<T>::calculatePerceptualLightness(const RGB & rgb) {
+template<class T> inline double DSP::DSP<T>::calculatePerceptualLightness(const RGB & rgb) {
     //Convert all sRGB 8 bit integer values to decimal 0.0-1.0
     double vR = double(rgb.red) / 255.0;
     double vG = double(rgb.green) / 255.0;
@@ -224,7 +223,7 @@ template<class T> inline double DSP<T>::calculatePerceptualLightness(const RGB &
     return YtoLstar(Y);
 }
 
-template<class T> inline double DSP<T>::calculateContrast(const RGB &rgb1, const RGB &rgb2) {
+template<class T> inline double DSP::DSP<T>::calculateContrast(const RGB &rgb1, const RGB &rgb2) {
     double lum1 = DSP<double>::calculatePerceptualLightness(rgb1);
     double lum2 = DSP<double>::calculatePerceptualLightness(rgb2);
     double brightest = std::max(lum1, lum2);
@@ -232,7 +231,7 @@ template<class T> inline double DSP<T>::calculateContrast(const RGB &rgb1, const
     return brightest - darkest;
 }
 
-template<class T> inline bool DSP<T>::calculateBWForegroundColor(const RGB &backgroundColor, const int &tolerence) {
+template<class T> inline bool DSP::DSP<T>::calculateBWForegroundColor(const RGB &backgroundColor, const int &tolerence) {
     RGB black, white;
     black.red = 0;
     black.green = 0;
@@ -249,5 +248,3 @@ template<class T> inline bool DSP<T>::calculateBWForegroundColor(const RGB &back
     else
         return true;
 }
-
-#endif // DSP_HPP

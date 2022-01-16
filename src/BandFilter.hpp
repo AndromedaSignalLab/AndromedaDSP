@@ -36,11 +36,11 @@ template<class T> inline T NominalFrequencies<T>::getNominalFrequency(T frequenc
 }
 
 template<class T> inline T NominalFrequencies<T>::calculateNominalFrequency(T frequency){
-    int firstDigit = MathUtil::firstDigit(frequency);
+    int firstDigit = DSP::MathUtil::firstDigit(frequency);
     if(firstDigit<5){
-        return MathUtil::roundBy(frequency, 3);
+        return DSP::MathUtil::roundBy(frequency, 3);
     } else
-        return MathUtil::roundBy(frequency, 2);
+        return DSP::MathUtil::roundBy(frequency, 2);
 }
 
 enum OctaveBandBase{
