@@ -17,8 +17,18 @@ file(GLOB DSP_SRC
     "src/*.cpp"
 )
 
+file(GLOB COMMON_SRC
+    "../Common/src/*.hpp"
+    "../Common/src/*.cpp"
+)
+
+include_directories(../Common/src)
+
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
-add_library(DSP ${DSP_SRC})
+add_library(DSP
+    ${DSP_SRC}
+    ${COMMON_SRC}
+)

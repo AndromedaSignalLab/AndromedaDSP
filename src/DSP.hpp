@@ -16,7 +16,7 @@ You should have received a copy of the GNU Lesser General Public License along w
 #include "MathUtil.hpp"
 #include <sstream>
 #include <iostream>
-#include "RGB.hpp"
+#include <RGB.hpp>
 
 #define REAL 0
 #define IMAG 1
