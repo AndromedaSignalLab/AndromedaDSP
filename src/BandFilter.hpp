@@ -186,9 +186,9 @@ class SpectrumAnalyzerBands{
         void resetMagnitudes();
         std::vector<SpectrumAnalyzerBandDTO<T>> getData();
         void getData(SpectrumAnalyzerBandDTO<T> * bandData);
-        void getAmplitudes(T * amplitudes);
-        void getAmplitudes(T * amplitudes, size_t beginningIndex);
-        void getAmplitudes(T * amplitudes, size_t beginningIndex, size_t endingIndex);
+        void getMagnitudes(T * magnitudes);
+        void getMagnitudes(T * magnitudes, size_t beginningIndex);
+        void getMagnitudes(T * magnitudes, size_t beginningIndex, size_t endingIndex);
     private:
         void init();
         std::vector<SpectrumAnalyzerBandDTO<T>> spectrumAnalyzerBands;
@@ -252,24 +252,24 @@ void SpectrumAnalyzerBands<T>::getData(SpectrumAnalyzerBandDTO<T> *bandData) {
 }
 
 template<typename T>
-void SpectrumAnalyzerBands<T>::getAmplitudes(T *amplitudes) {
+void SpectrumAnalyzerBands<T>::getMagnitudes(T *magnitudes) {
     for(int i=0; i<spectrumAnalyzerBands.size(); i++) {
-        amplitudes[i] = spectrumAnalyzerBands[i].getMagnitude();
+        magnitudes[i] = spectrumAnalyzerBands[i].getMagnitude();
     }
 }
 
 template<typename T>
-void SpectrumAnalyzerBands<T>::getAmplitudes(T *amplitudes, size_t beginningIndex) {
+void SpectrumAnalyzerBands<T>::getMagnitudes(T *magnitudes, size_t beginningIndex) {
     for(int i=beginningIndex; i<spectrumAnalyzerBands.size(); i++) {
-        amplitudes[i-beginningIndex] = spectrumAnalyzerBands[i].getMagnitude();
+        magnitudes[i-beginningIndex] = spectrumAnalyzerBands[i].getMagnitude();
     }
 }
 
 template<typename T>
 void
-SpectrumAnalyzerBands<T>::getAmplitudes(T *amplitudes, size_t beginningIndex, size_t endingIndex) {
+SpectrumAnalyzerBands<T>::getMagnitudes(T *magnitudes, size_t beginningIndex, size_t endingIndex) {
     for(int i=beginningIndex; i<endingIndex; i++) {
-        amplitudes[i-beginningIndex] = spectrumAnalyzerBands[i].getMagnitude();
+        magnitudes[i-beginningIndex] = spectrumAnalyzerBands[i].getMagnitude();
     }
 }
 
