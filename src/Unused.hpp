@@ -9,9 +9,7 @@ This library is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-#ifndef DSP_TEST_UNUSED_HPP
-#define DSP_TEST_UNUSED_HPP
-
+#pragma once
 #include <cmath>
 #include <vector>
 #include "SearchUtil.hpp"
@@ -171,4 +169,3 @@ void samples_to_10_bands_filterx(float *samples_vett, float *out_filters_vett, i
         return;
     }
 }
-#endif //DSP_TEST_UNUSED_HPP

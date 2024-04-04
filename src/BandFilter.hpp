@@ -9,8 +9,7 @@ This library is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-#ifndef BANDFILTER_HPP
-#define BANDFILTER_HPP
+#pragma once
 #include <cmath>
 #include <vector>
 #include "SearchUtil.hpp"
@@ -272,5 +271,3 @@ SpectrumAnalyzerBands<T>::getMagnitudes(T *magnitudes, size_t beginningIndex, si
         magnitudes[i-beginningIndex] = spectrumAnalyzerBands[i].getMagnitude();
     }
 }
-
-#endif // BANDFILTER_HPP

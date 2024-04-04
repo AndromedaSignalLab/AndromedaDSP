@@ -9,8 +9,7 @@ This library is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-#ifndef SEARCHUTIL_HPP
-#define SEARCHUTIL_HPP
+#pragma once
 
 template <class T>
 class SearchUtil {
@@ -79,5 +78,3 @@ template<class T> inline T SearchUtil<T>::getClosest(T val1, T val2,
     else
         return val1;
 }
-
-#endif //SEARCHUTIL_HPP
