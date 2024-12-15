@@ -30,9 +30,14 @@ namespace DSP {
         static inline T *hammingMultipliers(int windowLength);
         static inline T *blackmanMultipliers(int windowLength);
         static inline T calculateMagnitude(T real, T imaginary);
-        static inline T calculateMagnitudeDb(T real, T imaginary);
-        static inline T calculateMagnitudeDb(T magnitude);
+        static inline T calculateDecibel(T real, T imaginary);
+        static inline T magnitudeToDecibel(T magnitude);
+        static inline T decibelToMagnitude(T decibel);
         static inline T calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count);
+        //static inline T powerToDecibel(T powerValue);
+        //static inline T decibelToPower(T decibelValue);
+        static inline T linearToDecibel(T v1, T v2);
+        static inline T logarithm(T);
         static inline double calculatePerceptualLightness(const RGB &rgb);
         static inline double calculateContrast(const RGB &rgb1, const RGB &rgb2);
         /**
@@ -47,32 +52,37 @@ namespace DSP {
 }
 // Inline Method Definitions
 
-template <class T> inline T DSP::DSP<T>::calculateMagnitudeDb(T magnitude)
-{
-    return log10(magnitude)*20;
+template <class T> inline T DSP::DSP<T>::magnitudeToDecibel(T magnitude) {
+    return T(20)*logarithm(magnitude);
 }
 
-template <> inline double DSP::DSP<double>::calculateMagnitudeDb(double real, double imaginary)
-{
-    return 10*log10(real*real + imaginary*imaginary);
+template <class T> inline T DSP::DSP<T>::decibelToMagnitude(T decibel) {
+    return pow<T>(10, decibel/T(20));
 }
 
-template <> inline float DSP::DSP<float>::calculateMagnitudeDb(float real, float imaginary)
-{
-    return 10*log10f(real*real + imaginary*imaginary);
+template <> inline double DSP::DSP<double>::logarithm(double value) {
+    return log10(value);
 }
 
-template <> inline long double DSP::DSP<long double>::calculateMagnitudeDb(long double real, long double imaginary)
-{
-    return 10*log10l(real*real + imaginary*imaginary);
+template <> inline float DSP::DSP<float>::logarithm(float value) {
+    return log10f(value);
 }
 
+template <> inline long double DSP::DSP<long double>::logarithm(long double value) {
+    return log10l(value);
+}
 
-template <class T> inline T DSP::DSP<T>::calculateMagnitude(T real, T imaginary)
-{
+template <class T> inline T DSP::DSP<T>::logarithm(T value) {
+    return (T) log10(value);
+}
+
+template <class T> inline T DSP::DSP<T>::calculateDecibel(T real, T imaginary) {
+    return T(10)*logarithm(real*real + imaginary*imaginary);
+}
+
+template <class T> inline T DSP::DSP<T>::calculateMagnitude(T real, T imaginary) {
     return std::sqrt(real*real + imaginary*imaginary);
 }
-
 
 template <class T> inline T * DSP::DSP<T>::hanningMultipliers(size_t dataSize){
     T *multipliers;
@@ -180,6 +190,19 @@ template <typename T> inline T DSP::DSP<T>::calculateVolumeDbLevel(T* leftBuffer
     volume = T(20) * std::log10(std::sqrt(sum / T(count)));
 
     return volume;
+}
+/*
+Using the natural log, ln, log base e:
+linear-to-db(x) = ln(x) / (ln(10) / 20)
+db-to-linear(x) = e^(x * (ln(10) / 20))
+
+Using the common log, log, log base 10:
+linear-to-db(x) = log(x) * 20
+db-to-linear(x) = 10^(x / 20)
+*/
+
+template<class T> inline T DSP::DSP<T>::linearToDecibel(T v1, T v2) {
+    return T(20) * logarithm(v1/v2);
 }
 
 template<class T> inline double DSP::DSP<T>::calculatePerceptualLightness(const RGB & rgb) {
