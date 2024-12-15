@@ -73,7 +73,7 @@ template <class T> inline T DSP::DSP<T>::logarithm(T value) {
 }
 
 template <class T> inline T DSP::DSP<T>::calculateDecibel(T real, T imaginary) {
-    return T(10)*logarithm(real*real + imaginary*imaginary);
+    return T(20) * logarithm(calculateMagnitude(real, imaginary));
 }
 
 template <class T> inline T DSP::DSP<T>::calculateMagnitude(T real, T imaginary) {
