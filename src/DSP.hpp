@@ -11,11 +11,6 @@ You should have received a copy of the GNU Lesser General Public License along w
 
 #pragma once
 #include <cmath>
-#include <vector>
-#include "SearchUtil.hpp"
-#include "MathUtil.hpp"
-#include <sstream>
-#include <iostream>
 #include <RGB.hpp>
 
 #define REAL 0
@@ -32,6 +27,7 @@ namespace DSP {
         static inline T calculateMagnitude(T real, T imaginary);
         static inline T calculateDecibel(T real, T imaginary);
         static inline T magnitudeToDecibel(T magnitude);
+        static inline void magnitudeToDecibel(T* magnitudeValues, T* decibelValues, const size_t count);
         static inline T decibelToMagnitude(T decibel);
         static inline T calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count);
         //static inline T powerToDecibel(T powerValue);
@@ -179,6 +175,13 @@ template <class T> inline T * DSP::DSP<T>::hanningMultipliersMatlab(int N, short
     return w;
 }
 
+template <typename T> inline void DSP::DSP<T>::magnitudeToDecibel(T* magnitudeValues, T* decibelValues, size_t count) {
+    for(size_t i = 0; i < count; i++) {
+        decibelValues[i] = magnitudeToDecibel(magnitudeValues[i]);
+    }
+    return;
+}
+
 template <typename T> inline T DSP::DSP<T>::calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count) {
     T sum = 0;
     T volume = 0;
@@ -187,7 +190,7 @@ template <typename T> inline T DSP::DSP<T>::calculateVolumeDbLevel(T* leftBuffer
         sum += pow((T(leftBuffer[i]) + T(rightBuffer[i]))/T(2), 2);
     }
 
-    volume = T(20) * std::log10(std::sqrt(sum / T(count)));
+    volume = T(20) * logarithm(std::sqrt(sum / T(count)));
 
     return volume;
 }
