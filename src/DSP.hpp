@@ -32,7 +32,6 @@ namespace DSP {
         static inline T calculateMagnitude(T real, T imaginary);
         static inline T calculateMagnitudeDb(T real, T imaginary);
         static inline T calculateMagnitudeDb(T magnitude);
-        static inline T calculateExponetialVolume(T linearVolume);
         static inline T calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count);
         static inline double calculatePerceptualLightness(const RGB &rgb);
         static inline double calculateContrast(const RGB &rgb1, const RGB &rgb2);
@@ -168,14 +167,6 @@ template <class T> inline T * DSP::DSP<T>::hanningMultipliersMatlab(int N, short
         w[0] = 0.0;
     }
     return w;
-}
-
-template<class T> inline T DSP::DSP<T>::calculateExponetialVolume(T linearVolume){
-    if(linearVolume == 0)
-        return 0;
-    if(linearVolume == 1)
-        return 1;
-    return exp(pow(T(6.908), linearVolume)) / T(1000);
 }
 
 template <typename T> inline T DSP::DSP<T>::calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count) {
