@@ -77,7 +77,23 @@ template <class T> inline T DSP::DSP<T>::calculateDecibel(T real, T imaginary) {
 }
 
 template <class T> inline T DSP::DSP<T>::calculateMagnitude(T real, T imaginary) {
-    return std::sqrt(real*real + imaginary*imaginary);
+    //return std::sqrt(real*real + imaginary*imaginary); //<-- This calculation can cause owerflow
+    // In order to prevent overflow, we use the algorithm below
+    T small, big;
+    if(real<imaginary) {
+        small = real;
+        big = imaginary;
+    }
+    else {
+        small = imaginary;
+        big = real;
+    }
+    if(big == 0)
+        return abs(small);
+    else if(small == 0)
+        return abs(big);
+    T a = small/big;
+    return abs(big) * sqrt(1+a*a);
 }
 
 template <class T> inline T * DSP::DSP<T>::hanningMultipliers(size_t dataSize){
@@ -194,6 +210,7 @@ template <typename T> inline T DSP::DSP<T>::calculateVolumeDbLevel(T* leftBuffer
 
     return volume;
 }
+
 /*
 Using the natural log, ln, log base e:
 linear-to-db(x) = ln(x) / (ln(10) / 20)
