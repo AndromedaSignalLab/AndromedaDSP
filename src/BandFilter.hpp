@@ -92,7 +92,7 @@ template <class T>
 class BandFilter
 {
 public:
-    static inline std::vector<OctaveBand<T>> calculateOctaveBands(OctaveBandBase base, size_t nthOctave);
+    static inline std::vector<OctaveBand<T>> calculateOctaveBands(OctaveBandBase base, size_t nthOctave, T minFreq = 20, T maxFreq = 20000);
     /*
     template<class FFTDataType> static inline
     std::vector<SpectrumAnalyzerBandDTO<T>>
@@ -127,7 +127,7 @@ template <class T> inline T BandFilter<T>::calculateUpperEdgeBandFrequency(size_
 /*
  * "ANSI S1.11: Specification for Octave, Half-Octave, and Third Octave Band Filter Sets" (PDF). Retrieved 7 March 2018.
  */
-template<class T> inline std::vector<OctaveBand<T>> BandFilter<T>::calculateOctaveBands(OctaveBandBase base, size_t nthOctave) {
+template<class T> inline std::vector<OctaveBand<T>> BandFilter<T>::calculateOctaveBands(OctaveBandBase base, size_t nthOctave, T minFreq, T maxFreq) {
     const T fr = T(1000); //reference frequency
     const T G2 = T(2);
     const double G10 = pow(T(10), T(3)/T(10));
@@ -137,25 +137,31 @@ template<class T> inline std::vector<OctaveBand<T>> BandFilter<T>::calculateOcta
     size_t b = nthOctave; //bandwidth designator
     std::vector<OctaveBand<T>> octaveBands;
     T i = 0;
+    T currentBandIndex = 0;
     T G = (base == OctaveBandBase::Base10) ? G10 : G2;
 
     while(true) {
         OctaveBand<T> octaveBand;
         fm = calculateMidBandFrequency(b, G, fr, i);
         fm10 = (base == OctaveBandBase::Base10) ? fm : calculateMidBandFrequency(b, G10, fr, i);
-        octaveBand.bandNumber = i;
+        octaveBand.bandNumber = currentBandIndex;
         octaveBand.base = base;
         octaveBand.midBandFrequency = fm;
         octaveBand.lowerEdgeBandFrequency = calculateLowerEdgeBandFrequency(b, G, fm);
         octaveBand.upperEdgeBandFrequency = calculateUpperEdgeBandFrequency(b, G, fm);
+        if(octaveBand.upperEdgeBandFrequency < minFreq) {
+            i += T(1);
+            continue;
+        }
         if(nthOctave == 1 || nthOctave == 3)
             octaveBand.nominalMidBandFrequency = NominalFrequencies<T>::getNominalFrequency(fm10);
         else
             octaveBand.nominalMidBandFrequency = NominalFrequencies<T>::calculateNominalFrequency(fm10);
-        if(octaveBand.midBandFrequency > T(23000))
+        if(octaveBand.lowerEdgeBandFrequency > maxFreq)
             break;
         octaveBands.push_back(octaveBand);
         i += T(1);
+        currentBandIndex += T(1);
     }
 
     return octaveBands;
