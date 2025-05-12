@@ -23,7 +23,7 @@ template<class T>
 class NominalFrequencies {
 public:
     static inline T getNominalFrequency(T frequency);
-    static inline T calculateNominalFrequency(T frequency);
+    static inline T calculateNominalFrequency(T frequency, size_t nthOctave);
 };
 
 template<class T> inline T NominalFrequencies<T>::getNominalFrequency(T frequency){
@@ -34,12 +34,27 @@ template<class T> inline T NominalFrequencies<T>::getNominalFrequency(T frequenc
     return SearchUtil<T>::findClosest(nominalFrequencies, size, frequency);
 }
 
-template<class T> inline T NominalFrequencies<T>::calculateNominalFrequency(T frequency){
+template<class T> inline T NominalFrequencies<T>::calculateNominalFrequency(T frequency, size_t nthOctave){
+    const T reference = T(1000);  // Reference frequency (1000 Hz)
+    const T G = T(2);             // Base-2 logarithmic multiplier
+
+    T octaveFactor = pow(G, T(1) / T(nthOctave));  // 2^(1/nthOctave)
+
+    // Octave band index (i) hesaplanabilir, bu durumda frequency için uygun olan nominal frekansı hesaplayabiliriz
+    T logFrequency = log2(frequency / reference);  // Base-2 logaritması
+    T bandIndex = round(logFrequency / T(1));     // Band index'ini yuvarlama (logaritmaya göre)
+
+    // Logaritma hesaplaması ve base-2'ye göre normalize etme
+    T nominalFrequency = reference * pow(G, bandIndex * T(nthOctave));
+
+    return nominalFrequency;
+    /*
     int firstDigit = DSP::MathUtil::firstDigit(frequency);
     if(firstDigit<5){
         return DSP::MathUtil::roundBy(frequency, 3);
     } else
         return DSP::MathUtil::roundBy(frequency, 2);
+    */
 }
 
 enum OctaveBandBase{
@@ -66,26 +81,26 @@ public:
     inline T getMagnitude() const;
 private:
     T magnitude = 0;
-    //size_t sampleAmount = 0;
+    size_t sampleAmount = 0;
 };
 
 template<class T>
 inline T SpectrumAnalyzerBandDTO<T>::getMagnitude() const{
     if(magnitude == 0)
         return 0;
-    return magnitude;
+    return magnitude/T(sampleAmount);
 }
 
 template<class T>
 inline void SpectrumAnalyzerBandDTO<T>::addMagnitude(T magnitude) {
     this->magnitude += magnitude;
-    //sampleAmount++;
+    sampleAmount++;
 }
 
 template<class T>
 inline void SpectrumAnalyzerBandDTO<T>::resetMagnitude() {
     magnitude = 0;
-    //sampleAmount = 0;
+    sampleAmount = 0;
 }
 
 template <class T>
@@ -156,7 +171,7 @@ template<class T> inline std::vector<OctaveBand<T>> BandFilter<T>::calculateOcta
         if(nthOctave == 1 || nthOctave == 3)
             octaveBand.nominalMidBandFrequency = NominalFrequencies<T>::getNominalFrequency(fm10);
         else
-            octaveBand.nominalMidBandFrequency = NominalFrequencies<T>::calculateNominalFrequency(fm10);
+            octaveBand.nominalMidBandFrequency = NominalFrequencies<T>::calculateNominalFrequency(fm10, nthOctave);
         if(octaveBand.lowerEdgeBandFrequency > maxFreq)
             break;
         octaveBands.push_back(octaveBand);
