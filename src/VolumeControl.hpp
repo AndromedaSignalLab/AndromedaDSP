@@ -12,7 +12,7 @@ You should have received a copy of the GNU Lesser General Public License along w
 #pragma once
 #include <cmath>
 
-namespace DSP {
+namespace AndromedaDSP {
     template<class T>
     class VolumeControl {
         public:
@@ -24,14 +24,14 @@ namespace DSP {
 }
 
 
-template<class T> inline T DSP::VolumeControl<T>::calculateExponetialVolume(const T linearVolume, const size_t dynamicRange) {
+template<class T> inline T AndromedaDSP::VolumeControl<T>::calculateExponetialVolume(const T linearVolume, const size_t dynamicRange) {
     T a, b;
     size_t approximationOrder;
     calculateVariables(dynamicRange, approximationOrder, a, b);
     return calculateExponetialVolume(linearVolume, a, b);
 }
 
-template<class T> inline T DSP::VolumeControl<T>::calculateExponetialVolume(const T linearVolume, const T a, const T b) {
+template<class T> inline T AndromedaDSP::VolumeControl<T>::calculateExponetialVolume(const T linearVolume, const T a, const T b) {
     //This algorithm was taken from https://www.dr-lex.be/info-stuff/volumecontrols.html
     if(linearVolume == 0)
         return 0;
@@ -44,7 +44,7 @@ template<class T> inline T DSP::VolumeControl<T>::calculateExponetialVolume(cons
     return a * exp(b * linearVolume);
 }
 
-template<class T> inline void DSP::VolumeControl<T>::calculateVariables(const size_t dynamicRange, size_t &approximationOrder, T &a, T &b) {
+template<class T> inline void AndromedaDSP::VolumeControl<T>::calculateVariables(const size_t dynamicRange, size_t &approximationOrder, T &a, T &b) {
     switch(dynamicRange) {
         case 50:
             a = 3.1623e-3;

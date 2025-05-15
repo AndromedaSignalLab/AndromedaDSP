@@ -1,5 +1,5 @@
 /*
-DSP class declarations and definitions of DSP Project
+AndromedaDSP class declarations and definitions of DSP Project
 Copyright (C) 2020 Volkan Orhan
 
 This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.
@@ -16,9 +16,9 @@ You should have received a copy of the GNU Lesser General Public License along w
 #define REAL 0
 #define IMAG 1
 
-namespace DSP {
+namespace AndromedaDSP {
     template<class T>
-    class DSP {
+    class AndromedaDSP {
     public:
         static inline T *hanningMultipliers(size_t dataSize);
         static inline T *hanningMultipliersMatlab(int N, short itype = 0);
@@ -38,35 +38,35 @@ namespace DSP {
 }
 // Inline Method Definitions
 
-template <class T> inline T DSP::DSP<T>::magnitudeToDecibel(T magnitude) {
+template <class T> inline T AndromedaDSP::AndromedaDSP<T>::magnitudeToDecibel(T magnitude) {
     return T(20)*logarithm(magnitude);
 }
 
-template <class T> inline T DSP::DSP<T>::decibelToMagnitude(T decibel) {
+template <class T> inline T AndromedaDSP::AndromedaDSP<T>::decibelToMagnitude(T decibel) {
     return pow<T>(10, decibel/T(20));
 }
 
-template <> inline double DSP::DSP<double>::logarithm(double value) {
+template <> inline double AndromedaDSP::AndromedaDSP<double>::logarithm(double value) {
     return log10(value);
 }
 
-template <> inline float DSP::DSP<float>::logarithm(float value) {
+template <> inline float AndromedaDSP::AndromedaDSP<float>::logarithm(float value) {
     return log10f(value);
 }
 
-template <> inline long double DSP::DSP<long double>::logarithm(long double value) {
+template <> inline long double AndromedaDSP::AndromedaDSP<long double>::logarithm(long double value) {
     return log10l(value);
 }
 
-template <class T> inline T DSP::DSP<T>::logarithm(T value) {
+template <class T> inline T AndromedaDSP::AndromedaDSP<T>::logarithm(T value) {
     return (T) log10(value);
 }
 
-template <class T> inline T DSP::DSP<T>::calculateDecibel(T real, T imaginary) {
+template <class T> inline T AndromedaDSP::AndromedaDSP<T>::calculateDecibel(T real, T imaginary) {
     return T(20) * logarithm(calculateMagnitude(real, imaginary));
 }
 
-template <class T> inline T DSP::DSP<T>::calculateMagnitude(T real, T imaginary) {
+template <class T> inline T AndromedaDSP::AndromedaDSP<T>::calculateMagnitude(T real, T imaginary) {
     //return std::sqrt(real*real + imaginary*imaginary); //<-- This calculation can cause owerflow
     // In order to prevent overflow, we use the algorithm below
     T small, big;
@@ -86,7 +86,7 @@ template <class T> inline T DSP::DSP<T>::calculateMagnitude(T real, T imaginary)
     return abs(big) * sqrt(1+a*a);
 }
 
-template <class T> inline T * DSP::DSP<T>::hanningMultipliers(size_t dataSize){
+template <class T> inline T * AndromedaDSP::AndromedaDSP<T>::hanningMultipliers(size_t dataSize){
     T *multipliers;
 
     multipliers = new T[dataSize];
@@ -98,7 +98,7 @@ template <class T> inline T * DSP::DSP<T>::hanningMultipliers(size_t dataSize){
 }
 
 // Create a hamming window of windowLength samples in buffer
-template<class T> inline T* DSP::DSP<T>::hammingMultipliers(int windowLength) {
+template<class T> inline T* AndromedaDSP::AndromedaDSP<T>::hammingMultipliers(int windowLength) {
     T *timeDomain = new T[windowLength];
     for(int i = 0; i < windowLength; i++) {
         timeDomain[i] = T(0.53836) - ( T(0.46164) * cos( T(2) * M_PI * T(i)  / ( T(windowLength) - T(1) ) ) );
@@ -107,7 +107,7 @@ template<class T> inline T* DSP::DSP<T>::hammingMultipliers(int windowLength) {
     return timeDomain;
 }
 
-template<class T> inline T* DSP::DSP<T>::blackmanMultipliers(int windowLength) {
+template<class T> inline T* AndromedaDSP::AndromedaDSP<T>::blackmanMultipliers(int windowLength) {
     T *timeDomain = new T[windowLength];
     for(int i = 0; i < windowLength; i++) {
         timeDomain[i] = T(0.42) - T(0.5) * std::cos(T(2) * M_PI * i / (T(windowLength) - T(1))) + T(0.08) * std::cos(T(4.0) * M_PI * T(i) / (T(windowLength) - T(1)));
@@ -135,7 +135,7 @@ template<class T> inline T* DSP::DSP<T>::blackmanMultipliers(int windowLength) {
     Copyright 1988-2004 The MathWorks, Inc.
 %   $Revision: 1.11.4.3 $  $Date: 2007/12/14 15:05:04 $
 */
-template <class T> inline T * DSP::DSP<T>::hanningMultipliersMatlab(int N, short itype){
+template <class T> inline T * AndromedaDSP::AndromedaDSP<T>::hanningMultipliersMatlab(int N, short itype){
     int half, i, idx, n;
     T *w;
 
@@ -181,14 +181,14 @@ template <class T> inline T * DSP::DSP<T>::hanningMultipliersMatlab(int N, short
     return w;
 }
 
-template <typename T> inline void DSP::DSP<T>::magnitudeToDecibel(T* magnitudeValues, T* decibelValues, size_t count) {
+template <typename T> inline void AndromedaDSP::AndromedaDSP<T>::magnitudeToDecibel(T* magnitudeValues, T* decibelValues, size_t count) {
     for(size_t i = 0; i < count; i++) {
         decibelValues[i] = magnitudeToDecibel(magnitudeValues[i]);
     }
     return;
 }
 
-template <typename T> inline T DSP::DSP<T>::calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count) {
+template <typename T> inline T AndromedaDSP::AndromedaDSP<T>::calculateVolumeDbLevel(T* leftBuffer, T* rightBuffer,size_t count) {
     T sum = 0;
     T volume = 0;
 
@@ -211,6 +211,6 @@ linear-to-db(x) = log(x) * 20
 db-to-linear(x) = 10^(x / 20)
 */
 
-template<class T> inline T DSP::DSP<T>::linearToDecibel(T v1, T v2) {
+template<class T> inline T AndromedaDSP::AndromedaDSP<T>::linearToDecibel(T v1, T v2) {
     return T(20) * logarithm(v1/v2);
 }

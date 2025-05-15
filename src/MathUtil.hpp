@@ -11,7 +11,7 @@ You should have received a copy of the GNU Lesser General Public License along w
 
 #pragma once
 #include <cmath>
-namespace DSP {
+namespace AndromedaDSP {
     namespace MathUtil {
         template<class T> inline void divideLineIntoSegmentsAndGaps(T lineSize, unsigned int segmentAmount, T segmentGapRatio, T &resultingSegmentSize, T &resultingGapSize);
         template<class T> inline T clamp(T x, T a, T b);
